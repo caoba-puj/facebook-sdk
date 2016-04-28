@@ -6,7 +6,7 @@ def pp(o):
     print(json.dumps(o, indent=1))
 
 # Create a connection to the Graph API with your access token
-accessToken = 'CAACEdEose0cBAAU3vZCunSetZB8Q4byWcdkrZCjEOobKkpImxULMyTZBdkKQOydL96Lv4ZA59xYuZC4Nn7BIUtnejrHl6DoSQTqcX0pEWvQVccO05Am2zQqrbZBwVHhUZAsEy8zHvQ8b82w3JFw9zkOX1ZBMh97SMJsytAjqWiXYZAkJYatY8JzQAxt0zw3E1QxNgR4MjJQKkYKdwu6CdCGlIa'
+accessToken = ''
 g = facebook.GraphAPI(access_token=accessToken, version='2.2')
 
 # Find Pepsi and Coke in search results
