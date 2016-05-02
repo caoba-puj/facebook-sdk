@@ -1,6 +1,7 @@
 import facebook #pip install facebook-sdk
 import json
 
+#Archivos
 postsFile = open('posts.txt', 'w')
 likesFile = open('likes.txt', 'w')
 commentsFile = open('comments.txt', 'w')
