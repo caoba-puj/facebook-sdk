@@ -10,7 +10,7 @@ import thread
 #commentsFile = open('Data/comments.txt', 'w')
 
 #Acceso a Facebook
-token = 'EAACEdEose0cBACfSrZADIlLeV8aZBZAhov6LzVMYqbpCc9x8411Fhtr14yVK92g28XC3vfyULwRarijgksSZCxKf2zWDNfBfTGfC5nHJzIkbxIdm9tcxMH9IHRK9fWBxDHgCo6nHVqYGBNi1DiMBSZBJUWUT0fjOCX5UDFGOJ2AZDZD'
+token = ''
 graph = facebook.GraphAPI(access_token=token, version='2.2')
 
 def pruebaUsuario():
