@@ -26,7 +26,7 @@ pp(g.request("search", {'q' : 'social web', 'type' : 'page'}))
 
 # Get an instance of Mining the Social Web
 # Using the page name also works if you know it.
-# e.g. 'MiningTheSocialWeb' or 'CrossFit'
+# e.g. 'miningTheSocialWeb' or 'CrossFit'
 #hamburguesaselcorral
 mtsw_id = '146803958708175'
 pp(g.get_object(mtsw_id))
