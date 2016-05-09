@@ -2,17 +2,29 @@
 import facebook
 import json
 import requests
-import thread
+import web
+import time
+from facepy import GraphAPI
+from facepy import utils
+from urlparse import parse_qs
+
+#
 
 #Crear Archivos
-#postsFile = open('Data/posts.txt', 'w')
-#likesFile = open('Data/likes.txt', 'w')
-#commentsFile = open('Data/comments.txt', 'w')
+postsFile = open('Data/posts.txt', 'w')
+likesFile = open('Data/likes.txt', 'w')
+commentsFile = open('Data/comments.txt', 'w')
+
+app_id = "916717871760512"
+app_secret="92d85a8f6d3768b1e1d76d046b27e1c8"
+post_login_url="http://0.0.0.0:8080/"
 
 #Acceso a Facebook
-token = ''
+token = utils.get_application_access_token(app_id, app_secret)
+#token = "EAACEdEose0cBAAEOTkPTkbfZBOzwJye83bZAm9xU4VZC4CgC0dK6DSH17UMrcUBxZCQMFLZAN5grg01NjtyJjVTm0pmsmZCcUY0ZAezC8Pp1DWLzTztJmamK7FZC5rulZBd3VgMDVkon5NjFBlPVt9R3QvTgHHpxbxJnhAHAIizRBXAZDZD"
 graph = facebook.GraphAPI(access_token=token, version='2.2')
 
+"""
 def pruebaUsuario():
     #10151981468682251 Marco Lozano Sierra
     #10204409256658491
@@ -21,29 +33,30 @@ def pruebaUsuario():
 
     picture = graph.get_object("10151407860159534/picture")
     print picture
-
-pruebaUsuario()
-
-#profile = graph.get_object("chocolatesjet")
-#profile = graph.get_object("hamburguesaselcorral")
-
+    pruebaUsuario()
 """
+#profile = graph.get_object("chocolatesjet")
+profile = graph.get_object("hamburguesaselcorral")
+
 #posts = graph.get_object(profile['id']+"/posts",since='2010-01-01', until='2015-01-01',limit=50)
-posts = graph.get_object(profile['id']+"/posts")
+posts = graph.get_object(profile['id']+"/posts?fields=likes,comments,message")
 
-
+start = time.time()
 def getLikes(likes):
     try:
         while(True):
             likesFile = open('Data/likes.txt', 'a')
             JDictLikes= json.loads(json.dumps(likes))
             for like in JDictLikes['data']:
-                likeProfile = graph.get_object(like['id'])
-                likesFile.write(json.dumps(likeProfile)+"\n")
+                #likeProfile = graph.get_object(like['id'])
+
+                likesFile.write(json.dumps(like)+"\n")
 
             likes=requests.get(likes['paging']['next']).json()
     except KeyError:
         print "Error in Likes"
+        likesFile.write("\n")
+        print "Tiempo transcurrido [" + time.time() + "]"
         likesFile.close()
 
 def getComments(comments):
@@ -59,7 +72,9 @@ def getComments(comments):
             #if "next" in comments['paging']:
             comments=requests.get(comments['paging']['next']).json()
     except Exception as e:
-        print "Errorrrr " + e.message
+        print "Error in Comments"
+        commentsFile.write("\n")
+        print "Tiempo transcurrido [" + time.time() + "]"
         commentsFile.close()
 
 
@@ -67,44 +82,25 @@ def getComments(comments):
 try:
     while(True):
         postsFile = open('Data/posts.txt', 'a')
-        JDictPosts= json.loads(json.dumps(posts))
+        JDictPosts = json.loads(json.dumps(posts))
         for post in JDictPosts['data']:
             if "message" in post:
-#               [Opción 1]
-                #postsFile.write(json.dumps(po['created_time'].encode('utf-8'))+" "+json.dumps(po['message'].encode('utf-8'))+ "\n")
-
-#               [Opción 2]
-                #json.dump(po['message'] , postsFile, ensure_ascii=True, encoding="utf-8")
-
-#               [Opcion 3]
-#                string = unicode(json.dumps(po['message'] , 'utf8'))+ "\n"
-#                string_for_output = string.encode('utf8', 'replace')
-#                postsFile.write( string_for_output )
-
-#               [Opción 4]
-                #string = unicode(json.dumps(po['message']),encoding='utf-8', errors='replace')#+ "\n"
-#               string.replace("é","e")
-                #postsFile.write(string)
                 postsFile.write(json.dumps(post)+"\n")
 
-                #Extracción de LIKES
                 if "likes" in post:
                     likes = post['likes']
-#                    thread.start_new_thread( getLikes, (likes,) );
                     getLikes(likes)
-                #Fin Extracción de LIKES
 
-                #Extracción de COMMENTS
                 if "comments" in post:
                     comments = post['comments']
-#                    thread.start_new_thread( getComments, (comments,) );
                     getComments(comments)
-                #Fin Extracción de COMMENTS
 
         posts=requests.get(posts['paging']['next']).json()
 
 except Exception as e:
-    print "Errorrrr in post: " + e.message
+    print "Error in post: "
     postsFile.close()
+    print "Tiempo transcurrido ["+time.time()+"]"
 print "Info guardada!"
-"""
+end = time.time()
+print "Tiempo Total: "+(end - start)
