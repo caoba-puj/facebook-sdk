@@ -101,6 +101,6 @@ except Exception as e:
     print "Error in post: "
     postsFile.close()
     print "Tiempo transcurrido ["+time.time()+"]"
-print "Info guardada!"
+print "Información guardada!"
 end = time.time()
 print "Tiempo Total: "+(end - start)
