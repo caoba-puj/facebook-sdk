@@ -33,7 +33,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `parametrization`.`WhoToFollow` (
   `idWhoToFollow` INT NOT NULL AUTO_INCREMENT,
-  `twiterAccount` VARCHAR(45) NOT NULL,
+  `twiterAccount` VARCHAR(45) NULL,
   `brand` VARCHAR(45) NULL,
   `brandAttributes` VARCHAR(1000) NULL,
   PRIMARY KEY (`idWhoToFollow`))

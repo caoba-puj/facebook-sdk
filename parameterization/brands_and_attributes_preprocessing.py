@@ -43,15 +43,16 @@ def insertBrand(brand, brandAttributesWithoutStopWords):
     conn = MySQLdb.connect(host="localhost",
                            user="root",
                            passwd="root",
-                           db="segmentacion-nutresa",
+                           db="parametrization",
                            charset="utf8")
     x = conn.cursor()
     try:
-        x.execute("""INSERT INTO marca (marca,atributos) VALUES (%s,%s)""", (brand, brandAttributesWithoutStopWords))
+        x.execute("""INSERT INTO WhoToFollow (brand,brandAttributes) VALUES (%s,%s)""", (brand, brandAttributesWithoutStopWords))
         conn.commit()
     except:
         logging.error("ERROR")
         conn.rollback()
+        raise
 
     conn.close()
 
