@@ -1,18 +1,33 @@
 from nltk.corpus import stopwords
 import nltk
+from nltk.stem import *
 import csv
 import string
-
+#pip install MySQL-python
+#http://stackoverflow.com/questions/26866147/mysql-python-install-fatal-error
+import MySQLdb
+import logging, sys
+#Setting the log level
+logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 #Downloading the required corpora
 #nltk.download()
 
+#Method used to get the stem from a given word. This method works only for Spanish using the Snowball algorithm.
+#http://www.nltk.org/api/nltk.stem.html
+def stemming(word):
+    stemmer = SnowballStemmer("spanish")
+    result = stemmer.stem(word)
+    logging.debug(result)
+    return result
+
+#Method used to remove any punctuation sign from a given string
 def strip_punctuation(s):
     punctuation = {'/', '"'}
     for sign in punctuation:
         s = s.replace(sign, ' ')
     return s
 
-
+#Method used to remove the stopwords from a given sentence
 def removeStopWords(sentence):
     sentence = sentence.lower()
     # removing punctuation symbols
@@ -22,6 +37,26 @@ def removeStopWords(sentence):
     return  filtered_words
 
 
+#Method used to save the brand and the corresponding attributes once removed the StopWords into the database
+def insertBrand(brand, brandAttributesWithoutStopWords):
+    #http://blog.rastersoft.com/?p=15
+    conn = MySQLdb.connect(host="localhost",
+                           user="root",
+                           passwd="root",
+                           db="segmentacion-nutresa",
+                           charset="utf8")
+    x = conn.cursor()
+    try:
+        x.execute("""INSERT INTO marca (marca,atributos) VALUES (%s,%s)""", (brand, brandAttributesWithoutStopWords))
+        conn.commit()
+    except:
+        logging.error("ERROR")
+        conn.rollback()
+
+    conn.close()
+
+#Method used to process a CSV file with the brands and attributes. The idea is related to a brand, obtain only the
+#relevant words, removing the stopwords and saving a list with the important ones.
 def processFile(filePath):
     result = {}
     with open(filePath, "rt") as csvfile:
@@ -43,7 +78,19 @@ def processFile(filePath):
                 else:
                     result[brand] = brandAttributesWithoutStopWords
             except IndexError:
-                print(len(row))
-    print(result)
+                logging.error(len(row))
+    logging.debug(result)
 
+    logging.info(str(len(result)) + " items processed.")
+
+    logging.info("Saving processed items into the database.")
+
+    for key in result:
+        logging.debug(key)
+        logging.debug(result[key])
+        insertBrand(key, str(result[key]))
+
+logging.info("Process Started.")
 processFile('../allPreprocesado.csv')
+logging.info("Process Finished.")
+
