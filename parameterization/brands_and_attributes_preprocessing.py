@@ -1,3 +1,19 @@
+#!/usr/bin/env python
+#######################################################################################################################
+# File used to preprocess the allPreprocesado.csv file which contains all the brands and attributes. The idea is to
+# obtain the relevant words (withoud stopwords) and calculate their stems.
+# Finally save the results to a RDBMS like MYSQL
+#######################################################################################################################
+__author__ = "Wilson Alzate"
+__copyright__ = "Copyright 2016, Alianza CAOBA"
+__credits__ = ["Wilson Alzate"]
+__license__ = "GPL"
+__version__ = "1.0.1"
+__maintainer__ = "Wilson Alzate"
+__email__ = "walzate@javeriana.edu.co"
+__status__ = "Development"
+
+
 from nltk.corpus import stopwords
 import nltk
 from nltk.stem import *
