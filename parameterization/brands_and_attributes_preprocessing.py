@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #######################################################################################################################
-# File used to preprocess the allPreprocesado.csv file which contains all the brands and attributes. The idea is to
+# File used to preprocess the marcasYAtributosPreprocesado.csv file which contains all the brands and attributes. The idea is to
 # obtain the relevant words (withoud stopwords) and calculate their stems.
 # Finally save the results to a RDBMS like MYSQL
 #######################################################################################################################
@@ -117,6 +117,6 @@ def processFile(filePath):
         insertBrand(key, str(result[key]), str(brandAttributesStems))
 
 logging.info("Process Started.")
-processFile('../allPreprocesado.csv')
+processFile('../marcasYAtributosPreprocesado.csv')
 logging.info("Process Finished.")
 
