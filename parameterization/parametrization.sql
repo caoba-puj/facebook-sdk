@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `parametrization`.`WhoToFollow` (
   `twiterAccount` VARCHAR(45) NULL,
   `brand` VARCHAR(45) NULL,
   `brandAttributes` VARCHAR(1000) NULL,
+  `brandAttributesStems` VARCHAR(1000) NULL,
   PRIMARY KEY (`idWhoToFollow`))
 ENGINE = InnoDB;
 

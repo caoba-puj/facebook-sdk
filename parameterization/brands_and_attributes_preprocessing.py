@@ -20,8 +20,15 @@ def stemming(word):
     logging.debug(result)
     return result
 
+#Method used to iterate an array of words to get its stem and return a new arrray of stems
+def stemmingListOfWords(listOfWords):
+    result = []
+    for word in listOfWords:
+        result.append(stemming(word))
+    return result
+
 #Method used to remove any punctuation sign from a given string
-def strip_punctuation(s):
+def removePunctuation(s):
     punctuation = {'/', '"'}
     for sign in punctuation:
         s = s.replace(sign, ' ')
@@ -31,14 +38,14 @@ def strip_punctuation(s):
 def removeStopWords(sentence):
     sentence = sentence.lower()
     # removing punctuation symbols
-    sentence = strip_punctuation(sentence)
+    sentence = removePunctuation(sentence)
     word_list  = nltk.word_tokenize(sentence)
     filtered_words = [word for word in word_list if word not in stopwords.words('spanish')]
     return  filtered_words
 
 
 #Method used to save the brand and the corresponding attributes once removed the StopWords into the database
-def insertBrand(brand, brandAttributesWithoutStopWords):
+def insertBrand(brand, brandAttributesWithoutStopWords, brandAttributesStems):
     #http://blog.rastersoft.com/?p=15
     conn = MySQLdb.connect(host="localhost",
                            user="root",
@@ -47,7 +54,7 @@ def insertBrand(brand, brandAttributesWithoutStopWords):
                            charset="utf8")
     x = conn.cursor()
     try:
-        x.execute("""INSERT INTO WhoToFollow (brand,brandAttributes) VALUES (%s,%s)""", (brand, brandAttributesWithoutStopWords))
+        x.execute("""INSERT INTO WhoToFollow (brand,brandAttributes,brandAttributesStems) VALUES (%s,%s, %s)""", (brand, brandAttributesWithoutStopWords,brandAttributesStems))
         conn.commit()
     except:
         logging.error("ERROR")
@@ -89,7 +96,9 @@ def processFile(filePath):
     for key in result:
         logging.debug(key)
         logging.debug(result[key])
-        insertBrand(key, str(result[key]))
+        brandAttributesStems = stemmingListOfWords(result[key])
+        logging.debug(brandAttributesStems)
+        insertBrand(key, str(result[key]), str(brandAttributesStems))
 
 logging.info("Process Started.")
 processFile('../allPreprocesado.csv')
