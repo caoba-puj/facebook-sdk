@@ -28,6 +28,13 @@ logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 #Downloading the required corpora
 #nltk.download()
 
+#Method used to obtain the part of speech of a list of words
+#http://www.nltk.org/book/ch05.html
+def partOfSpeech(listOfWords):
+    result = []
+    result.append(nltk.pos_tag(listOfWords))
+    return result
+
 #Method used to get the stem from a given word. This method works only for Spanish using the Snowball algorithm.
 #http://www.nltk.org/api/nltk.stem.html
 def stemming(word):
@@ -61,7 +68,7 @@ def removeStopWords(sentence):
 
 
 #Method used to save the brand and the corresponding attributes once removed the StopWords into the database
-def insertBrand(brand, brandAttributesWithoutStopWords, brandAttributesStems):
+def insertBrand(brand, brandAttributesWithoutStopWords, brandAttributesStems, brandAttributesPOS):
     #http://blog.rastersoft.com/?p=15
     conn = MySQLdb.connect(host="localhost",
                            user="root",
@@ -70,7 +77,7 @@ def insertBrand(brand, brandAttributesWithoutStopWords, brandAttributesStems):
                            charset="utf8")
     x = conn.cursor()
     try:
-        x.execute("""INSERT INTO WhoToFollow (brand,brandAttributes,brandAttributesStems) VALUES (%s,%s, %s)""", (brand, brandAttributesWithoutStopWords,brandAttributesStems))
+        x.execute("""INSERT INTO WhoToFollow (brand,brandAttributes,brandAttributesStems, brandAttributesPOS) VALUES (%s,%s, %s, %s)""", (brand, brandAttributesWithoutStopWords,brandAttributesStems, brandAttributesPOS))
         conn.commit()
     except:
         logging.error("ERROR")
@@ -113,10 +120,13 @@ def processFile(filePath):
         logging.debug(key)
         logging.debug(result[key])
         brandAttributesStems = stemmingListOfWords(result[key])
+        brandAttributesPOS = partOfSpeech(result[key])
         logging.debug(brandAttributesStems)
-        insertBrand(key, str(result[key]), str(brandAttributesStems))
+        logging.debug(brandAttributesPOS)
+        insertBrand(key, str(result[key]), str(brandAttributesStems), str(brandAttributesPOS))
 
 logging.info("Process Started.")
 processFile('../marcasYAtributosPreprocesado.csv')
-logging.info("Process Finished.")
+logging.info("Process Fin ished.")
+
 

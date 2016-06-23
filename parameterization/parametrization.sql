@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `parametrization`.`WhoToFollow` (
   `brand` VARCHAR(45) NULL,
   `brandAttributes` VARCHAR(1000) NULL,
   `brandAttributesStems` VARCHAR(1000) NULL,
+  `brandAttributesPOS` VARCHAR(2000) NULL,
   PRIMARY KEY (`idWhoToFollow`))
 ENGINE = InnoDB;
 
