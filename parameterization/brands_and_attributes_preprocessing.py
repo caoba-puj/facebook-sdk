@@ -127,6 +127,6 @@ def processFile(filePath):
 
 logging.info("Process Started.")
 processFile('../marcasYAtributosPreprocesado.csv')
-logging.info("Process Fin ished.")
+logging.info("Process Finished.")
 
 
