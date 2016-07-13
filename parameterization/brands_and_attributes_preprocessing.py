@@ -52,7 +52,7 @@ def stemmingListOfWords(listOfWords):
 
 #Method used to remove any punctuation sign from a given string
 def removePunctuation(s):
-    punctuation = {'/', '"'}
+    punctuation = {'/', '"', '(', ')', '.', ',', '%'}
     for sign in punctuation:
         s = s.replace(sign, ' ')
     return s
